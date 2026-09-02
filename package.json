@@ -1,0 +1,23 @@
+{
+  "name": "tarea-cero-qa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willyfvr/tarea-cero-qa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/willyfvr/tarea-cero-qa/issues"
+  },
+  "homepage": "https://github.com/willyfvr/tarea-cero-qa#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.1"
+  }
+}
