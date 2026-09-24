@@ -30,5 +30,10 @@ test.describe('Login to application', () => {
     await pressTab;
 
     await loginButton.click();
+
+    
+
+    const newTaskButton = page.getByRole('button', {name: 'Nueva tarea'});
+    await expect(newTaskButton).toBeVisible({timeout:10000})
   });
 });
