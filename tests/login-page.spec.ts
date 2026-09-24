@@ -1,6 +1,9 @@
 import {expect, test} from '@playwright/test';
 import {enableFlutterSemantics} from '../utils/flutter-helpers';
 
+const TEST_USER = process.env.TEST_PRO_USER || "undefined user"
+const TEST_PASSWORD = process.env.TEST_PRO_PASSWORD || "undefined password"
+
 test.describe('Login to application', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('https://tareacero.interaad.com.ar/');
@@ -16,13 +19,13 @@ test.describe('Login to application', () => {
     // complete login form
     const userInput = page.getByRole('textbox', {name: 'Usuario o e-mail'})
     await userInput.click();
-    await userInput.fill('victor.fvr@gmail.com');
+    await userInput.fill(TEST_USER);
     
     await pressTab;
 
     const passwordInput = page.getByRole('textbox', { name: 'Contraseña' });
     await passwordInput.click();
-    await passwordInput.pressSequentially('Admin1234', { delay: 50 });
+    await passwordInput.pressSequentially(TEST_PASSWORD, { delay: 50 });
 
     await pressTab;
 
