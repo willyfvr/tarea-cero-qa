@@ -42,7 +42,7 @@ jobs:
       # Inject GitHub Secrets as environment variables for this step
         env:
           TEST_USER: ${{ secrets.TEST_USER }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASS }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: npx playwright test
 
       # OPTION 1: Downloadable .zip artifact (as working now)

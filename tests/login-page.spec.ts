@@ -2,7 +2,7 @@ import {expect, test} from '@playwright/test';
 import {enableFlutterSemantics} from '../utils/flutter-helpers';
 
 const TEST_USER = process.env.TEST_PRO_USER || "undefined user"
-const TEST_PASS = process.env.TEST_PRO_PASS || "undefined password"
+const TEST_PASSWORD = process.env.TEST_PRO_PASSWORD || "undefined password"
 
 test.describe('Login to application', () => {
   test.beforeEach(async ({page}) => {
@@ -25,7 +25,7 @@ test.describe('Login to application', () => {
 
     const passwordInput = page.getByRole('textbox', { name: 'Contraseña' });
     await passwordInput.click();
-    await passwordInput.pressSequentially(TEST_PASS, { delay: 50 });
+    await passwordInput.pressSequentially(TEST_PASSWORD, { delay: 50 });
 
     await pressTab;
 
