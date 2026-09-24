@@ -19,13 +19,13 @@ test.describe('Login to application', () => {
     // complete login form
     const userInput = page.getByRole('textbox', {name: 'Usuario o e-mail'})
     await userInput.click();
-    await userInput.fill('victor.fvr@gmail.com');
+    await userInput.fill(TEST_USER);
     
     await pressTab;
 
     const passwordInput = page.getByRole('textbox', { name: 'Contraseña' });
     await passwordInput.click();
-    await passwordInput.pressSequentially('Admin1234', { delay: 50 });
+    await passwordInput.pressSequentially(TEST_PASS, { delay: 50 });
 
     await pressTab;
 
