@@ -1,0 +1,5 @@
+export const LOGIN_PAGE_TEXTS = {
+  USERNAME_PLACEHOLDER: "Usuario / Email",
+  PASSWORD_PLACEHOLDER: "Contraseña",
+  LOGIN_BUTTON: "INICIAR SESIÓN",
+}
