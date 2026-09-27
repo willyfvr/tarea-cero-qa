@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { enableFlutterSemantics } from '../utils/flutter-helpers';
 
-const TEST_USER = process.env.TEST_USER || 'undefined user';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'undefined password';
+const TEST_USER = process.env.TEST_PRO_USER || 'undefined user';
+const TEST_PASSWORD = process.env.TEST_STANDARD_PASS || 'undefined password';
 
 test.describe('Login to application', () => {
   test.beforeEach(async ({ page }) => {
