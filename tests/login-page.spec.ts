@@ -1,49 +1,59 @@
-import { expect, Page, test, Locator } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { enableFlutterSemantics } from '../utils/flutter-helpers';
 import { HomePage } from '../pages/home-page';
 import { LoginPage } from '../pages/login-page';
 
-const TEST_PRO_USER = process.env.TEST_PRO_USER || 'undefined user';
-const TEST_PRO_PASSWORD = process.env.TEST_PRO_PASS || 'undefined password';
-const TEST_STANDARD_USER = process.env.TEST_STANDARD_USER || 'undefined user';
-const TEST_STANDARD_PASSWORD = process.env.TEST_STANDARD_PASS || 'undefined password';
+const testAccounts = [
+  {
+    role: 'PRO',
+    username: process.env.TEST_PRO_USER,
+    password: process.env.TEST_PRO_PASS,
+    usernameVariable: 'TEST_PRO_USER',
+    passwordVariable: 'TEST_PRO_PASS',
+  },
+  {
+    role: 'standard',
+    username: process.env.TEST_STANDARD_USER,
+    password: process.env.TEST_STANDARD_PASS,
+    usernameVariable: 'TEST_STANDARD_USER',
+    passwordVariable: 'TEST_STANDARD_PASS',
+  },
+];
 
-test.describe('Login to application with user PRO.', () => {
-  let loginPage: LoginPage;
-  let homePage: HomePage;
-
+test.describe('Login', () => {
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    homePage = new HomePage(page);
-
+    // Begin from the login screen for each account-specific sign-in scenario.
+    await page.goto('/');
     await enableFlutterSemantics(page);
-
-    await page.goto('https://tareacero.interaad.com.ar/');
   });
 
-  test('Active user can be login.', async ({ page }) => {
-    const loginButton = loginPage.loginButton;
-    const pressTab = page.keyboard.press('Tab');
-    await expect(loginButton).toBeAttached();
+  for (const account of testAccounts) {
+    test(`an active ${account.role} account can sign in`, async ({ page }) => {
+      if (!account.username || !account.password) {
+        // Skip only this scenario when its dedicated test-account credentials are not configured.
+        test.skip(true, `Set ${account.usernameVariable} and ${account.passwordVariable} to run this scenario.`);
+        return;
+      }
+      const pressTab = page.keyboard.press('Tab');
+      const loginPage = new LoginPage(page);
+      const homePage = new HomePage(page);
 
-    // We complete login form
-    const userInput = loginPage.usernameInput;
-    await userInput.click();
-    await userInput.fill(TEST_PRO_USER);
+      // Enter the configured test account and submit the login form.
+      const loginUsernameInput = loginPage.usernameInput;
+      await loginUsernameInput.click();
+      await loginUsernameInput.fill(account.username);
 
-    await pressTab;
+      await pressTab;
 
-    const passwordInput = loginPage.passwordInput;
-    await passwordInput.click();
-    await passwordInput.pressSequentially(TEST_PRO_PASSWORD, { delay: 50 });
+      const loginPasswordInput = loginPage.passwordInput;
+      await loginPasswordInput.click();
+      await loginPasswordInput.fill(account.password);
 
-    await pressTab;
+      await pressTab;
+      await loginPage.loginButton.click();
 
-    await loginButton.click();
-
-    const newTaskButton = homePage.newTaskButton;
-
-    // We verified that the user logged in and the system navigated to the next page.
-    await expect(newTaskButton).toBeVisible({ timeout: 10000 });
-  });
+      // The authenticated home-page control is the observable success condition for sign-in.
+      await expect(homePage.newTaskButton).toBeVisible({ timeout: 10000 });
+    });
+  }
 });
