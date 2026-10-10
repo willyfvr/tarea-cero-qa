@@ -1,34 +1,36 @@
 import { expect, test } from '@playwright/test';
 import { enableFlutterSemantics } from '../utils/flutter-helpers';
+import { LoginPage } from '../pages/login-page';
+import { RegistrationPage } from '../pages/registration-page';
 
-test.fixme('Register new user with valid information.', () => {
-  // STEPS TO TEST
-  // 1- access to site
-  // 2- press "Registrate ahora" link
-  // 3- check the navigation to registration form
-  // 4- fill fields with the correct information (credentials)
-  // 5- press submit button "CONTINUAR"
-
+test.describe('Registration entry and validation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://tareacero.interaad.com.ar/');
-
-    // Call the generic helper before running each test
+    // Start each scenario from the public login screen with Flutter semantics enabled.
+    await page.goto('/');
     await enableFlutterSemantics(page);
   });
 
-  test('User can see the login form.', async ({ page }) => {
-    const loginButton = page.getByRole('button', { name: 'INICIAR SESIÓN' });
+  test('opens the registration form, validates blank submission, and returns to login', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const registrationPage = new RegistrationPage(page);
 
-    // Approach 1: Check that the element exists in the DOM tree (Most reliable for Flutter)
-    await expect(loginButton).toBeAttached();
+    // Follow the registration link and check that every required field and action is present.
+    await loginPage.registrationButton.click();
 
-    // Approach 2: Standard visibility check with a explicit wait
-    await expect(loginButton).toBeVisible({ timeout: 10000 });
+    await expect(registrationPage.heading).toBeVisible();
+    await expect(registrationPage.emailInput).toBeVisible();
+    await expect(registrationPage.usernameInput).toBeVisible();
+    await expect(registrationPage.passwordInput).toBeVisible();
+    await expect(registrationPage.confirmPasswordInput).toBeVisible();
+    await expect(registrationPage.continueButton).toBeVisible();
+    await expect(registrationPage.backButton).toBeVisible();
 
-    await page.getByRole('button', { name: 'Registrate ahora' }).click()
+    // A blank submission exercises validation without creating an account.
+    await registrationPage.continueButton.click();
+    await expect(registrationPage.validationMessage).toBeVisible();
 
-    // await page.getByRole('textbox', { name: 'Usuario o e-mail' }).fill('victor.fvr@gmail.com');
-
-    //await loginButton.click();
+    // Confirm the registration screen provides a way back to login.
+    await registrationPage.backButton.click();
+    await expect(loginPage.loginButton).toBeVisible();
   });
 });
